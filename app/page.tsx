@@ -54,7 +54,7 @@ const categories: { name: Category; icon: string }[] = [
   { name: "Petiscos", icon: "🍿" },
 ];
 
-const products: Product[] = [
+const defaultProducts: Product[] = [
   { id: 1, name: "Heineken", detail: "Long neck 330ml • gelada", category: "Cervejas", price: 8.99, oldPrice: 9.99, badge: "premium", image: "/catalog/marcas/heineken-long-neck.webp", isAlcoholic: true },
   { id: 2, name: "Brahma Duplo Malte", detail: "Lata 350ml • gelada", category: "Cervejas", price: 4.99, badge: "mais pedida", image: "/catalog/marcas/brahma-duplo-malte.webp", isAlcoholic: true },
   { id: 3, name: "Budweiser", detail: "Lata 350ml • gelada", category: "Cervejas", price: 5.49, image: "/catalog/marcas/budweiser-350.webp", isAlcoholic: true },
@@ -73,7 +73,6 @@ const products: Product[] = [
   { id: 16, name: "Ruffles Original", detail: "Pacote 76g", category: "Petiscos", price: 9.99, image: "/catalog/marcas/ruffles-original.webp" },
 ];
 
-const productIds = new Set(products.map((product) => product.id));
 const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 function parseCart(snapshot: string | null): Cart {
@@ -85,7 +84,7 @@ function parseCart(snapshot: string | null): Cart {
 
     return Object.entries(parsed).reduce<Cart>((validCart, [key, value]) => {
       const id = Number(key);
-      if (productIds.has(id) && typeof value === "number" && Number.isFinite(value) && value > 0) {
+      if (Number.isInteger(id) && id > 0 && typeof value === "number" && Number.isFinite(value) && value > 0) {
         validCart[id] = Math.min(99, Math.floor(value));
       }
       return validCart;
@@ -171,6 +170,7 @@ function FulfillmentToggle({ value, onChange, compact = false }: { value: Fulfil
 export default function Home() {
   const cartSnapshot = useSyncExternalStore(subscribeToCart, getCartSnapshot, getServerCartSnapshot);
   const cart = useMemo(() => parseCart(cartSnapshot), [cartSnapshot]);
+  const [adminProducts, setAdminProducts] = useState<Product[]>([]);
   const [category, setCategory] = useState<Category>("Todos");
   const [query, setQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
@@ -202,6 +202,34 @@ export default function Home() {
     }
     window.dispatchEvent(new Event(CART_CHANGE_EVENT));
   }, []);
+
+  useEffect(() => {
+    const loadAdminProducts = () => {
+      try {
+        const raw = window.localStorage.getItem("capivara-admin-products-v1");
+        if (raw) setAdminProducts(JSON.parse(raw));
+      } catch {
+        setAdminProducts([]);
+      }
+    };
+    loadAdminProducts();
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "capivara-admin-products-v1") loadAdminProducts();
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("capivara-admin-change", loadAdminProducts);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("capivara-admin-change", loadAdminProducts);
+    };
+  }, []);
+
+  const products = useMemo(() => {
+    if (adminProducts.length === 0) return defaultProducts;
+    const merged = new Map(defaultProducts.map((product) => [product.id, product]));
+    adminProducts.forEach((product) => merged.set(product.id, product));
+    return Array.from(merged.values()).filter((product) => !("active" in product) || (product as Product & { active?: boolean }).active !== false);
+  }, [adminProducts]);
 
   useEffect(() => {
     const isLocked = cartOpen || checkoutOpen;
