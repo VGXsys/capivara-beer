@@ -34,6 +34,14 @@ const initialProducts: Product[] = [
   { id: 12, name: "Monster Energy", detail: "Lata 473ml", category: "Energéticos", price: 11.99, cost: 7.1, stock: 11, minStock: 8, image: "/catalog/marcas/monster-473.webp", active: true },
   { id: 14, name: "Gelo em Cubos", detail: "Pacote 5kg", category: "Gelo", price: 12, cost: 6.5, stock: 8, minStock: 10, image: "/catalog/marcas/gelo-5kg.webp", active: true },
   { id: 16, name: "Ruffles Original", detail: "Pacote 76g", category: "Petiscos", price: 9.99, cost: 5.8, stock: 14, minStock: 6, image: "/catalog/marcas/ruffles-original.webp", active: true },
+  { id: 5, name: "Amstel", detail: "Lata 350ml • gelada", category: "Cervejas", price: 4.49, cost: 2.85, stock: 52, minStock: 14, image: "/catalog/marcas/amstel-350.webp", active: true, isAlcoholic: true },
+  { id: 6, name: "Corona Extra", detail: "Long neck 330ml • gelada", category: "Cervejas", price: 8.99, cost: 5.6, stock: 22, minStock: 8, image: "/catalog/marcas/corona-extra.webp", active: true, isAlcoholic: true },
+  { id: 7, name: "Combo da Toca", detail: "6 Brahma + 6 Amstel + gelo 5kg", category: "Cervejas", price: 59.9, cost: 39.5, stock: 10, minStock: 3, image: "/catalog/marcas/combo-da-toca.webp", active: true, isAlcoholic: true, badge: "combo" },
+  { id: 9, name: "Coca-Cola Sem Açúcar", detail: "Garrafa PET 2 litros", category: "Refrigerantes", price: 11.99, cost: 7.2, stock: 17, minStock: 8, image: "/catalog/marcas/coca-cola-zero-2l.webp", active: true },
+  { id: 10, name: "Guaraná Antarctica", detail: "Garrafa PET 2 litros", category: "Refrigerantes", price: 9.99, cost: 6.1, stock: 21, minStock: 8, image: "/catalog/marcas/guarana-antarctica-2l.webp", active: true },
+  { id: 11, name: "Pepsi", detail: "Garrafa PET 2 litros", category: "Refrigerantes", price: 8.99, cost: 5.4, stock: 18, minStock: 8, image: "/catalog/marcas/pepsi-2l.webp", active: true },
+  { id: 13, name: "Red Bull", detail: "Lata 250ml", category: "Energéticos", price: 10.99, cost: 6.8, stock: 15, minStock: 8, image: "/catalog/marcas/red-bull-250.webp", active: true },
+  { id: 15, name: "Amendoim Japonês Dori", detail: "Pacote 100g", category: "Petiscos", price: 6.99, cost: 3.9, stock: 20, minStock: 6, image: "/catalog/marcas/dori-amendoim.webp", active: true },
 ];
 
 const initialFinance: FinanceEntry[] = [
